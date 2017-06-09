@@ -1,0 +1,19 @@
+{
+    "list": [
+        {
+          "ClassID": 1,
+          "OrnamentType": 0,
+          "SubType": 0
+        },
+        {
+          "ClassID": 2,
+          "OrnamentType": 1,
+          "SubType": 0
+        },
+        {
+          "ClassID": 3,
+          "OrnamentType": 2,
+          "SubType": 0
+        }
+    ]
+}

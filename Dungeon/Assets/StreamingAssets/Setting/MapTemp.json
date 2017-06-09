@@ -1,0 +1,59 @@
+{
+    "list": [
+        {
+            "Level": 1,
+            "Width": 100,
+            "Height": 100,
+            "OverlapCount": 10000,
+            "RoomRateList": [
+            {
+              "ClassID": 1,
+              "Rate": 42
+            },
+            {
+              "ClassID": 2,
+              "Rate": 10
+            },
+            {
+              "ClassID": 3,
+              "Rate": 10
+            },
+            {
+              "ClassID": 4,
+              "Rate": 10
+            },
+            {
+              "ClassID": 5,
+              "Rate": 10
+            },
+            {
+              "ClassID": 6,
+              "Rate": 10
+            },
+            {
+              "ClassID": 7,
+              "Rate": 5
+            },
+            {
+              "ClassID": 8,
+              "Rate": 1
+            },
+            {
+              "ClassID": 9,
+              "Rate": 1
+            },
+            {
+              "ClassID": 10,
+              "Rate": 1
+            }
+          ]
+        },
+        {
+            "Level": 2,
+            "Width": 50,
+            "Height": 50,
+            "OverlapCount": 1000,
+            "RoomRateList": [ {"ClassID": 1, "Rate":  50 }, {"ClassID": 2, "Rate":  30 },{"ClassID": 3, "Rate":  20 }]
+        }
+    ]
+}

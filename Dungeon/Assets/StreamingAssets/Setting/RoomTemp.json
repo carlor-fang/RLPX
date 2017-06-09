@@ -1,0 +1,78 @@
+{
+    "list": [
+      {
+        "ClassID": 1,
+        "Width": 14,
+        "Height": 14,
+        "OrnamentCount": 3,
+        "ObstacleRate": 70
+      },
+      {
+        "ClassID": 2,
+        "Width": 20,
+        "Height": 14,
+        "OrnamentCount": 8,
+        "ObstacleRate": 70
+      },
+      {
+        "ClassID": 3,
+        "Width": 24,
+        "Height": 14,
+        "OrnamentCount": 8,
+        "ObstacleRate": 70
+      },
+      {
+        "ClassID": 4,
+        "Width": 28,
+        "Height": 14,
+        "OrnamentCount": 8,
+        "ObstacleRate": 70
+      },
+      {
+        "ClassID": 5,
+        "Width": 20,
+        "Height": 20,
+        "OrnamentCount": 8,
+        "ObstacleRate": 70
+      },
+      {
+        "ClassID": 6,
+        "Width": 24,
+        "Height": 20,
+        "OrnamentCount": 8,
+        "ObstacleRate": 70
+      },
+      {
+        "ClassID": 7,
+        "Width": 28,
+        "Height": 20,
+        "OrnamentCount": 8,
+        "ObstacleRate": 70
+      },
+      {
+        "ClassID": 8,
+        "Width": 28,
+        "Height": 24,
+        "OrnamentCount": 8,
+        "ObstacleRate": 70
+      },
+      {
+        "ClassID": 9,
+        "Width": 20,
+        "Height": 28,
+        "OrnamentCount": 8,
+        "ObstacleRate": 70
+      },
+      {
+        "ClassID": 10,
+        "Width": 24,
+        "Height": 28,
+        "OrnamentCount": 8,
+        "ObstacleRate": 70
+      }
+
+
+
+
+    ]
+}
