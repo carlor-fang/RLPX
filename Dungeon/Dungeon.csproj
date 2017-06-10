@@ -246,6 +246,7 @@
     <Compile Include="Assets\_Scripts\Map\MapManager.cs" />
     <Compile Include="Assets\_Scripts\Map\Object\ActiveObject.cs" />
     <Compile Include="Assets\_Scripts\Map\Object\BaseObject.cs" />
+    <Compile Include="Assets\_Scripts\Map\Object\FuncObject\AutoMoveObject.cs" />
     <Compile Include="Assets\_Scripts\Map\Object\FuncObject\MoveObject.cs" />
     <Compile Include="Assets\_Scripts\Map\Object\MonsterObject.cs" />
     <Compile Include="Assets\_Scripts\Map\Object\ObstacleObject.cs" />

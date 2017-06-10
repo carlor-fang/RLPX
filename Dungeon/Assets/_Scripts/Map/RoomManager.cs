@@ -192,7 +192,7 @@ public class RoomManager : MonoBehaviour {
         }
         #endregion
 
-        void AddWay(int startx, int starty, int endx, int endy, Room fromRoom, Room toRoom)
+        void AddWay(int startx, int starty, int endx, int endy, int dir, Room fromRoom, Room toRoom)
         {
                 GameObject Prefab = (ResourceManager.instance.GetAsset<GameObject>("Prefabs/Way"));
                 for (int i = startx; i < endx; i++)
@@ -203,7 +203,7 @@ public class RoomManager : MonoBehaviour {
 
                                 GameObject wayObject = Instantiate(Prefab);
                                 Way way = wayObject.GetComponent<Way>();
-                                way.Init(LevelManager.GetElementID(), 0, "way_"+i+"_"+j, i, j);
+                                way.Init(LevelManager.GetElementID(), 0, "way_"+i+"_"+j, i, j, dir);
                                 wayList[i * 100000 + j] = way;
                                 way.SetConnectRoom(fromRoom, toRoom);
                                 way.Flag = i * 100000 + j;
@@ -264,7 +264,7 @@ public class RoomManager : MonoBehaviour {
                                                         doorPosition = Mathf.FloorToInt((from.max.x - to.min.x) / 2 + to.min.x);
                                                 if (CheckDoorPosition(from, to, dir, doorPosition))
                                                 {
-                                                        AddWay(doorPosition, Mathf.FloorToInt(from.max.y) - 1, doorPosition + GameConst.WayWidth, Mathf.FloorToInt(from.max.y + dis + 1), fromRoom, toRoom);
+                                                        AddWay(doorPosition, Mathf.FloorToInt(from.max.y) - 1, doorPosition + GameConst.WayWidth, Mathf.FloorToInt(from.max.y + dis + 1), dir, fromRoom, toRoom);
                                                         return dis;
                                                 }
                                         }
@@ -286,7 +286,7 @@ public class RoomManager : MonoBehaviour {
                                                         doorPosition = Mathf.FloorToInt((from.max.y - to.min.y) / 2 + to.min.y);
                                                 if (CheckDoorPosition(from, to, dir, doorPosition))
                                                 {
-                                                        AddWay(Mathf.FloorToInt(from.max.x) - 1, doorPosition, Mathf.FloorToInt(from.max.x) + dis + 1, doorPosition + GameConst.WayWidth, fromRoom, toRoom);
+                                                        AddWay(Mathf.FloorToInt(from.max.x) - 1, doorPosition, Mathf.FloorToInt(from.max.x) + dis + 1, doorPosition + GameConst.WayWidth, dir, fromRoom, toRoom);
                                                         return dis;
                                                 }
                                         }
@@ -331,7 +331,7 @@ public class RoomManager : MonoBehaviour {
                                                         doorPosition = Mathf.FloorToInt((to.max.y - from.min.y) / 2 + from.min.y);
                                                 if (CheckDoorPosition(from, to, dir, doorPosition))
                                                 {
-                                                        AddWay(Mathf.FloorToInt(from.max.x) - 1, doorPosition, Mathf.FloorToInt(from.max.x) + dis + 1, doorPosition + GameConst.WayWidth, fromRoom, toRoom);
+                                                        AddWay(Mathf.FloorToInt(from.max.x) - 1, doorPosition, Mathf.FloorToInt(from.max.x) + dis + 1, doorPosition + GameConst.WayWidth, dir, fromRoom, toRoom);
                                                         return dis;
                                                 }
                                         }
@@ -363,7 +363,7 @@ public class RoomManager : MonoBehaviour {
                                                         doorPosition = Mathf.FloorToInt((to.max.x - from.min.x) / 2 + from.min.x);
                                                 if (CheckDoorPosition(from, to, dir, doorPosition))
                                                 {
-                                                        AddWay(doorPosition, Mathf.FloorToInt(from.max.y) - 1, doorPosition + GameConst.WayWidth, Mathf.FloorToInt(from.max.y + dis + 1), fromRoom, toRoom);
+                                                        AddWay(doorPosition, Mathf.FloorToInt(from.max.y) - 1, doorPosition + GameConst.WayWidth, Mathf.FloorToInt(from.max.y + dis + 1), dir, fromRoom, toRoom);
                                                         return dis;
                                                 }
                                         }
@@ -448,7 +448,7 @@ public class RoomManager : MonoBehaviour {
                                         //doorPosition = Mathf.FloorToInt(Mathf.Abs(from.min.x - to.min.x) / 2 + Mathf.Min(to.min.x, from.min.x));
                                         if (CheckDoorPosition(from, to, dir, doorPosition))
                                         {
-                                                AddWay(doorPosition, Mathf.FloorToInt(from.max.y) - 1, doorPosition + GameConst.WayWidth, Mathf.FloorToInt(from.max.y + dis + 1), fromRoom, toRoom);
+                                                AddWay(doorPosition, Mathf.FloorToInt(from.max.y) - 1, doorPosition + GameConst.WayWidth, Mathf.FloorToInt(from.max.y + dis + 1), dir, fromRoom, toRoom);
                                                 return dis;
                                         }
                                 }
