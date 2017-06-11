@@ -20,5 +20,10 @@ public class Wall : RoomElement {
                 base.Init(id, roomId, name, positionx, positiony, GameConst.Order_Wall, GameConst.RoomElementType.Wall, "Scavengers_SpriteSheet_25");
                 
         }
+
+        public void SetEnabled(bool value)
+        {
+                GetComponent<BoxCollider2D>().enabled = value;
+        }
         #endregion
 }

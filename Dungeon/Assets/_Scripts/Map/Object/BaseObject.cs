@@ -21,6 +21,9 @@ public class BaseObject : MonoBehaviour {
         private string imageName;
         public string ImageName { get { return imageName; } }
 
+        private GameConst.RoomElementType objType;
+        public GameConst.RoomElementType ObjType { get { return objType; } set { objType = value; } }
+
         void Awake()
         {
                 state = GameConst.ObjectState.None;        

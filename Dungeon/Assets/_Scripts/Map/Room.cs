@@ -24,17 +24,31 @@ public class Room : MonoBehaviour {
         //房间边界，包括通道和墙壁
         private Bounds roomBounds;
 
-        private List<Floor> floorList;
-        private List<Wall> wallList;
-        private List<Door> doorList;
-        private List<OrnamentObject> ornamentList;
-        private List<ObstacleObject> obstacleList;
+        private Dictionary<int, BaseObject> objList;
+
+        private Dictionary<int, int> floorDictionary;
+        private List<int> floorList;
+        private Dictionary<int, int> wallDictionary;
+        private List<int> wallList;
+        private Dictionary<int, int> doorDictionary;
+        private List<int> doorList;
+        private Dictionary<int, int> ornamentDictionary;
+        private List<int> ornamentList;
+        private Dictionary<int, int> obstacleDictionary;
+        private List<int> obstacleList;
+
         //private List<Way> wayList;
 
         private Dictionary<int, Room> connectRoomList;
         #endregion
 
         #region private
+
+        private int GetPosKey(int col, int row)
+        {
+                return col * 100000 + row;
+        }
+
         private void CreateFloors()
         {
                 GameObject Prefab = (ResourceManager.instance.GetAsset<GameObject>("Prefabs/Floor"));
@@ -48,8 +62,15 @@ public class Room : MonoBehaviour {
                                         string name = gameObject.name + "floor_" + i + "_" + j;
                                         Floor floor = floorObject.GetComponent<Floor>();
                                         floor.Init(LevelManager.GetElementID(), roomId, name, i, j);
-                                        floorList.Add(floor);
+                                        objList[floor.ID] = floor;
+                                        floorList.Add(floor.ID);
+                                        floorDictionary[GetPosKey(i, j)] = floor.ID;
                                 }
+                        }
+
+                        for (int i = 0; i < floorList.Count; i++)
+                        {
+                                Debug.Log(objList[floorList[i]].Position.x + "." + objList[floorList[i]].Position.y);
                         }
                 }
                 finally
@@ -57,11 +78,6 @@ public class Room : MonoBehaviour {
                         Prefab = null;
                 }
 
-        }
-
-        private int GetPosKey(int col, int row)
-        {
-                return col * 100000 + row;
         }
 
         private void CreateWalls()
@@ -90,7 +106,9 @@ public class Room : MonoBehaviour {
                                                 string name = gameObject.name + "_wall_" + i + "_" + j;
                                                 Wall wall = wallObject.GetComponent<Wall>();
                                                 wall.Init(LevelManager.GetElementID(), roomId, name, i, j);
-                                                wallList.Add(wall);
+                                                objList[wall.ID] = wall;
+                                                wallList.Add(wall.ID);
+                                                wallDictionary[GetPosKey(i, j)] = wall.ID;
                                         }
                                 }
 
@@ -116,12 +134,11 @@ public class Room : MonoBehaviour {
                         string name = gameObject.name + "_door" + wall.Position.x + "_" + wall.Position.y;
                         Door door = doorObject.GetComponent<Door>();
                         door.Init(LevelManager.GetElementID(), roomId, name, wall.Position.x, wall.Position.y);
-                        doorList.Add(door);
+                        objList[door.ID] = door;
+                        doorList.Add(door.ID);
+                        doorDictionary[GetPosKey(Mathf.FloorToInt(wall.Position.x), Mathf.FloorToInt(wall.Position.y))] = door.ID;
 
-                        wallList.Remove(wall);
-                        wall.Clear();
-                        Destroy(wall);
-                        wall = null;
+                        wall.SetEnabled(false);
                 }
                 finally
                 {
@@ -134,7 +151,7 @@ public class Room : MonoBehaviour {
         {
                 for (int i = 0; i < wallList.Count; i++)
                 {
-                        Vector3 p = wallList[i].Position;
+                        Vector3 p = objList[wallList[i]].Position;
                         int x = Mathf.FloorToInt(p.x);
                         int y = Mathf.FloorToInt(p.y);
                         switch (dir)
@@ -145,7 +162,7 @@ public class Room : MonoBehaviour {
                                                 {
                                                         for (int j = 0; j < 1; j++)
                                                         {
-                                                                DestroyWallAndBuildDoor(wallList[i + j]);
+                                                                DestroyWallAndBuildDoor(objList[wallList[i + j]] as Wall);
                                                         }
 
                                                         return;
@@ -158,7 +175,7 @@ public class Room : MonoBehaviour {
                                                 {
                                                         for (int j = 0; j < 1; j++)
                                                         {
-                                                                DestroyWallAndBuildDoor(wallList[i + j]);
+                                                                DestroyWallAndBuildDoor(objList[wallList[i + j]] as Wall);
                                                         }
 
                                                         return;
@@ -171,7 +188,7 @@ public class Room : MonoBehaviour {
                                                 {
                                                         for (int j = 0; j < 1; j++)
                                                         {
-                                                                DestroyWallAndBuildDoor(wallList[i + j]);
+                                                                DestroyWallAndBuildDoor(objList[wallList[i + j]] as Wall);
                                                         }
                                                         return;
                                                 }
@@ -184,7 +201,7 @@ public class Room : MonoBehaviour {
                                                 {
                                                         for (int j = 0; j < 1; j++)
                                                         {
-                                                                DestroyWallAndBuildDoor(wallList[i + j]);
+                                                                DestroyWallAndBuildDoor(objList[wallList[i + j]] as Wall);
                                                         }
                                                         return;
                                                 }
@@ -276,28 +293,28 @@ public class Room : MonoBehaviour {
                 }
         }
         */
-        T FindBlankObject<T>(List<T> list, int exceptx1, int excepty1, int exceptx2, int excepty2)
+        BaseObject FindBlankObject(List<int> list, int exceptx1, int excepty1, int exceptx2, int excepty2)
         {
                 int repeatCount = 10;
                 while (repeatCount > 0)
                 {
                         int index = Mathf.FloorToInt(UnityEngine.Random.value * list.Count);
-                        RoomElement ele = list[index] as RoomElement;
+                        RoomElement ele = objList[list[index]] as RoomElement;
                         if (ele.OrnamentId == 0 && ele.Position.x != exceptx1 && ele.Position.y != excepty1
                                  && ele.Position.x != exceptx2 && ele.Position.y != excepty2)
-                                return list[index];
+                                return objList[list[index]];
                         repeatCount--;
                 }
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                        RoomElement ele = list[i] as RoomElement;
+                        RoomElement ele = objList[list[i]] as RoomElement;
                         if (ele.OrnamentId == 0 && ele.Position.x != exceptx1 && ele.Position.y != excepty1
                                  && ele.Position.x != exceptx2 && ele.Position.y != excepty2)
-                                return list[i];
+                                return objList[list[i]];
                 }
 
-                return default(T);
+                return null;
         }
 
         void AddOrnamentExcute(RoomElement element, OrnamentTemplate temp)
@@ -309,7 +326,9 @@ public class Room : MonoBehaviour {
                         string name = gameObject.name + "Ornament_" + element.Position.x + "_" + element.Position.y;
                         OrnamentObject ornament = ornamentObject.GetComponent<OrnamentObject>();
                         ornament.Init(LevelManager.GetElementID(), roomId, name, element.Position.x, element.Position.y, temp);
-                        ornamentList.Add(ornament);
+                        objList[ornament.ID] = ornament;
+                        ornamentList.Add(ornament.ID);
+                        ornamentDictionary[GetPosKey(Mathf.FloorToInt(element.Position.x), Mathf.FloorToInt(element.Position.y))] = ornament.ID;
 
                         element.OrnamentId = ornament.ID;
                 }
@@ -328,7 +347,7 @@ public class Room : MonoBehaviour {
                 {
                         case (int)GameConst.OrnamentType.Floor:
                                 {
-                                        Floor floor = FindBlankObject(floorList, -1, -1, -1, -1);
+                                        Floor floor = FindBlankObject(floorList, -1, -1, -1, -1) as Floor;
                                         if (floor)
                                         {
                                                 AddOrnamentExcute(floor, temp);                                             
@@ -337,7 +356,7 @@ public class Room : MonoBehaviour {
                                 break;
                         case (int)GameConst.OrnamentType.Wall:
                                 {
-                                        Wall wall = FindBlankObject(wallList, -1, -1, -1, -1);
+                                        Wall wall = FindBlankObject(wallList, -1, -1, -1, -1) as Wall;
                                         if (wall)
                                         {
                                                 AddOrnamentExcute(wall, temp);
@@ -346,7 +365,7 @@ public class Room : MonoBehaviour {
                                 break;
                         case (int)GameConst.OrnamentType.Door:
                                 {
-                                        Door door = FindBlankObject(doorList, -1, -1, -1, -1);
+                                        Door door = FindBlankObject(doorList, -1, -1, -1, -1) as Door;
                                         if (door)
                                         {
                                                 AddOrnamentExcute(door, temp);
@@ -364,9 +383,6 @@ public class Room : MonoBehaviour {
                 if (floor.Position.y == Mathf.FloorToInt(roomBounds.min.y + GameConst.RoomOutsize)) return false;
                 if (floor.Position.y == Mathf.FloorToInt(roomBounds.max.y - GameConst.RoomOutsize - 1)) return false;
 
-                //Floor floor = FindBlankObject(floorList, Mathf.FloorToInt(roomBounds.min.x + GameConst.RoomOutsize + 1), Mathf.FloorToInt(roomBounds.min.y + GameConst.RoomOutsize + 1),
-                //        Mathf.FloorToInt(roomBounds.max.x - GameConst.RoomOutsize - 1), Mathf.FloorToInt(roomBounds.max.y - GameConst.RoomOutsize - 1));
-
                 GameObject Prefab = (ResourceManager.instance.GetAsset<GameObject>("Prefabs/Obstacle"));
                 try
                 {
@@ -374,7 +390,9 @@ public class Room : MonoBehaviour {
                         string name = gameObject.name + "Obstacle_" + floor.Position.x + "_" + floor.Position.y;
                         ObstacleObject obstacle = obstacleObject.GetComponent<ObstacleObject>();
                         obstacle.Init(LevelManager.GetElementID(), roomId, name, floor.Position.x, floor.Position.y);
-                        obstacleList.Add(obstacle);
+                        objList[obstacle.ID] = obstacle;
+                        obstacleList.Add(obstacle.ID);
+                        obstacleDictionary[GetPosKey(Mathf.FloorToInt(floor.Position.x), Mathf.FloorToInt(floor.Position.y))] = obstacle.ID;
 
                         floor.OrnamentId = obstacle.ID;
                 }
@@ -386,6 +404,17 @@ public class Room : MonoBehaviour {
                 return true;
         }
 
+        private void ClearList(List<int> list)
+        {
+                for (int i = 0; i < list.Count; i++)
+                {
+                        BaseObject obj = objList[list[i]];
+                        objList.Remove(list[i]);
+                        obj.Clear();
+                        Destroy(obj);
+                        obj = null;
+                }
+        }
         #endregion
 
         #region public
@@ -411,55 +440,38 @@ public class Room : MonoBehaviour {
 
         public void Clear()
         {
-                while (floorList.Count > 0)
-                {
-                        Floor floor = floorList[0];
-                        floorList.RemoveAt(0);
-                        floor.Clear();
-                        Destroy(floor);
-                        floor = null;
-                }
-                while (wallList.Count > 0)
-                {
-                        Wall wall = wallList[0];
-                        wallList.RemoveAt(0);
-                        wall.Clear();
-                        Destroy(wall);
-                        wall = null;
-                }
-                while (doorList.Count > 0)
-                {
-                        Door door = doorList[0];
-                        doorList.RemoveAt(0);
-                        door.Clear();
-                        Destroy(door);
-                        door = null;
-                }
-                connectRoomList.Clear();
-                while (ornamentList.Count > 0)
-                {
-                        OrnamentObject ornament = ornamentList[0];
-                        ornamentList.RemoveAt(0);
-                        ornament.Clear();
-                        Destroy(ornament);
-                        ornament = null;
-                }
-                while (obstacleList.Count > 0)
-                {
-                        ObstacleObject obstacle = obstacleList[0];
-                        obstacleList.RemoveAt(0);
-                        obstacle.Clear();
-                        Destroy(obstacle);
-                        obstacle = null;
-                }
+                ClearList(floorList);
+                floorList.Clear();
+                floorDictionary.Clear();
+                floorList = null;
+                floorDictionary = null;
 
-                floorList       = null;
-                wallList        = null;
-                doorList        = null;
+                ClearList(wallList);
+                wallList.Clear();
+                wallDictionary.Clear();
+                wallList = null;
+                wallDictionary = null;
+
+                ClearList(doorList);
+                doorList.Clear();
+                doorDictionary.Clear();
+                doorList = null;
+                doorDictionary = null;
+
+                ClearList(ornamentList);
+                ornamentList.Clear();
+                ornamentDictionary.Clear();
+                ornamentList = null;
+                ornamentDictionary = null;
+
+                ClearList(obstacleList);
+                obstacleList.Clear();
+                obstacleDictionary.Clear();
+                obstacleList = null;
+                obstacleDictionary = null;
+
+                connectRoomList.Clear();
                 connectRoomList = null;
-                ornamentList    = null;
-                obstacleList    = null;
-                //roomBounds = null;
         }
 
         public void Init(int id, RoomTemplate temp, Vector3 position)
@@ -472,11 +484,18 @@ public class Room : MonoBehaviour {
                 //roomBounds.SetMinMax(new Vector3(Mathf.CeilToInt(roomBounds.min.x), Mathf.CeilToInt(roomBounds.min.y), 1.0f),
                 //        new Vector3(Mathf.CeilToInt(roomBounds.max.x), Mathf.CeilToInt(roomBounds.max.y), 1.0f));
 
-                floorList       = new List<Floor>();
-                wallList        = new List<Wall>();
-                doorList        = new List<Door>();
-                ornamentList    = new List<OrnamentObject>();
-                obstacleList    = new List<ObstacleObject>();
+                objList         = new Dictionary<int, BaseObject>();
+
+                floorDictionary = new Dictionary<int, int>();
+                floorList       = new List<int>();
+                wallDictionary  = new Dictionary<int, int>();
+                wallList        = new List<int>();
+                doorDictionary  = new Dictionary<int, int>();
+                doorList        = new List<int>();
+                ornamentDictionary = new Dictionary<int, int>();
+                ornamentList    = new List<int>();
+                obstacleDictionary = new Dictionary<int, int>();
+                obstacleList = new List<int>();
                 //wayList         = new List<Way>();
                 connectRoomList = new Dictionary<int, Room>();
 
@@ -515,12 +534,10 @@ public class Room : MonoBehaviour {
                 while (true)
                 {
                         int index = Mathf.FloorToInt(UnityEngine.Random.value * floorList.Count);
-                        if (floorList[index].OrnamentId == 0)
-                                return floorList[index].Position;
+                        RoomElement roomEle = objList[floorList[index]] as RoomElement;
+                        if (roomEle && roomEle.OrnamentId == 0)
+                                return roomEle.Position;
                 }
-                //int key = GetPosKey(Mathf.FloorToInt(floorList[index].Position.x), Mathf.FloorToInt(floorList[index].Position.y));
-
-                //return floorList[index].Position;
         }
 
         public void CreateOrnaments()
@@ -542,7 +559,8 @@ public class Room : MonoBehaviour {
                         - (Mathf.FloorToInt(roomBounds.size.x) - GameConst.RoomOutsize * 2 - 2) * 2; //左右地板边
                 for (int i = 0; i < ornamentList.Count; i++)
                 {
-                        if (ornamentList[i].OrnamentTemp.OrnamentType == (int)GameConst.OrnamentType.Floor)
+                        OrnamentObject ornamentObject = objList[ornamentList[i]] as OrnamentObject;
+                        if (ornamentObject.OrnamentTemp.OrnamentType == (int)GameConst.OrnamentType.Floor)
                                 count--;
                 }
 
@@ -550,14 +568,34 @@ public class Room : MonoBehaviour {
 
                 for (int i = 0; i < floorList.Count; i++)
                 {
-                        if (floorList[i].OrnamentId != 0) continue;
+                        Floor floor = objList[floorList[i]] as Floor;
+                        if (floor.OrnamentId != 0) continue;
                         if (UnityEngine.Random.value < 0.5) continue;
 
-                        if (!AddObstacle(floorList[i])) continue;
+                        if (!AddObstacle(floor)) continue;
 
                         count--;
                         if (count <= 0) break;
                 }
+        }
+
+        public bool IsInBounds(float x, float y)
+        {
+                if (x < roomBounds.min.x + GameConst.RoomOutsize) return false;
+                if (y < roomBounds.min.y + GameConst.RoomOutsize) return false;
+                if (x > roomBounds.max.x - GameConst.RoomOutsize) return false;
+                if (y > roomBounds.max.y - GameConst.RoomOutsize) return false;
+
+                return true;
+        }
+
+        public bool IsBlock(float x, float y)
+        {
+                int poskey = GetPosKey(Mathf.FloorToInt(x), Mathf.FloorToInt(y));
+                if (wallDictionary.ContainsKey(poskey)) return true;
+                if (obstacleDictionary.ContainsKey(poskey)) return true;
+
+                return false;
         }
         #endregion
 }

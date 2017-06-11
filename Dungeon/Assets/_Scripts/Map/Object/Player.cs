@@ -87,6 +87,7 @@ public class Player : ActiveObject {
         public void Init(int id, int roomId, string name, float positionx, float positiony)
         {
                 base.Init(id, roomId, name, positionx, positiony, GameConst.MapElementZ, GameConst.Order_Object, "Scavengers_SpriteSheet_32");
+                ObjType = GameConst.RoomElementType.Player;
         }
 
         public void ChangeRoom(int roomId)

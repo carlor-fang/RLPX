@@ -6,6 +6,7 @@ public class MoveObject : MonoBehaviour {
 
         public float inverseMoveTime;
         public float moveTime = 0.1f;
+
         private Vector3 targetPosition;
         private Vector3 nextPosition;
 
@@ -69,7 +70,20 @@ public class MoveObject : MonoBehaviour {
                 }
         }
 
-        public bool Move(int xDir, int yDir, out RaycastHit2D hit)
+        private bool Move(int xDir, int yDir)
+        {
+                //Store start position to move from, based on objects current transform position.
+                Vector2 start = new Vector2(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)); // transform.position;
+
+                // Calculate end position based on the direction parameters passed in when calling Move.
+                Vector2 end = start + new Vector2(xDir, yDir);
+
+                StartCoroutine(SmoothMovement(end));
+
+                return true;
+        }
+
+        private bool Move(int xDir, int yDir, out RaycastHit2D hit)
         {
                 //Store start position to move from, based on objects current transform position.
                 Vector2 start = new Vector2(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)); // transform.position;
@@ -112,9 +126,7 @@ public class MoveObject : MonoBehaviour {
                         //Find a new position proportionally closer to the end, based on the moveTime
                         Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime * Time.deltaTime);
 
-                        Debug.Log("---------");
                         Debug.Log(rb2D.position);
-                        Debug.Log(end);
                         //Call MovePosition on attached Rigidbody2D and move it to the calculated position.
                         rb2D.MovePosition(newPostion);
                         //gameObject.transform.position = newPostion;
@@ -125,30 +137,38 @@ public class MoveObject : MonoBehaviour {
                         //Return and loop until sqrRemainingDistance is close enough to zero to end the function
                         yield return null;
                 }
+
+
         }
 
         public void AttemptMove<T>(int xDir, int yDir)
         where T : Component
         {
-                //Hit will store whatever our linecast hits when Move is called.
-                RaycastHit2D hit;
 
                 //Set canMove to true if Move was successful, false if failed.
-                bool canMove = Move(xDir, yDir, out hit);
+                if (gameObject.tag == "Player")
+                {
+                        //Hit will store whatever our linecast hits when Move is called.
+                        bool canMove = false;
+                        RaycastHit2D hit;
 
-                //Check if nothing was hit by linecast
-                if (hit.transform == null)
-                        //If nothing was hit, return and don't execute further code.
-                        return;
+                        canMove = Move(xDir, yDir, out hit);
+                        if (hit.transform == null)
+                                //If nothing was hit, return and don't execute further code.
+                                return;
 
-                //Get a component reference to the component of type T attached to the object that was hit
-                T hitComponent = hit.transform.GetComponent<T>();
+                        T hitComponent = hit.transform.GetComponent<T>();
 
-                //If canMove is false and hitComponent is not equal to null, meaning MovingObject is blocked and has hit something it can interact with.
-                if (!canMove && hitComponent != null)
+                        //If canMove is false and hitComponent is not equal to null, meaning MovingObject is blocked and has hit something it can interact with.
+                        if (!canMove && hitComponent != null)
 
-                        //Call the OnCantMove function and pass it hitComponent as a parameter.
-                        OnCantMove(hitComponent);
+                                //Call the OnCantMove function and pass it hitComponent as a parameter.
+                                OnCantMove(hitComponent);
+                }
+                else
+                {
+                        Move(xDir, yDir);
+                }
         }
 
         public virtual void OnCantMove<T>(T component)

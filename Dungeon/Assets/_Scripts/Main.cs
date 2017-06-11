@@ -34,5 +34,16 @@ public class Main : MonoBehaviour {
 
         void Update()
         {
+                //left click
+                if (Input.GetMouseButtonDown(1))
+                {
+                        Vector2 sp = Input.mousePosition;
+                        Vector2 wp = GetComponent<Camera>().ScreenToWorldPoint(sp);
+                        wp.x = Mathf.RoundToInt(wp.x);
+                        wp.y = Mathf.RoundToInt(wp.y);               
+                        //GameManager.instance.levelMgr.Monster.GetComponent<AutoMoveObject>().SetTarget(wp);
+                }
+
+                
         }
 }

@@ -17,5 +17,6 @@ public class ObstacleObject : BaseObject {
         public void Init(int id, int roomId, string name, float positionx, float positiony)
         {
                 Init(id, roomId, name, positionx, positiony, GameConst.MapElementZ, GameConst.Order_Ostacle, "Scavengers_SpriteSheet_28");
+                ObjType = GameConst.RoomElementType.Obstacle;
         }
 }

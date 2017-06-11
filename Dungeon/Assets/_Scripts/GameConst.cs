@@ -59,7 +59,10 @@ public class GameConst : MonoBehaviour {
 
                 Way,
                 Ornament,
-                Object 
+                Obstacle, 
+
+                Player,
+                Monster,
         }
 
         public enum ObjectAction

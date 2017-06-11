@@ -13,7 +13,6 @@ public class Floor : RoomElement {
 	// Update is called once per frame
 	void Update ()
         {
-		
 	}
 
         #region public

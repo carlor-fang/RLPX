@@ -5,6 +5,7 @@ using UnityEngine;
 public class RoomElement : BaseObject {
         #region declaration
         private GameConst.RoomElementType elementType;
+        public GameConst.RoomElementType ElementType { get { return elementType; } set { elementType = value; } }
         private int ornamentId;
         public  int OrnamentId { get { return ornamentId; } set { ornamentId = value; } }
         #endregion
@@ -32,6 +33,7 @@ public class RoomElement : BaseObject {
                 //Sprite sp           = Sprite.Create(texture2d, sr.sprite.textureRect, new Vector2(0.5f, 0.5f));
                 //sr.sprite           = sp;
                 base.Init(id, roomId, name, positionx, positiony, GameConst.MapElementZ, zorder, imageFile);
+                ObjType = type;
         }
 
         #endregion

@@ -28,6 +28,7 @@ public class OrnamentObject : BaseObject {
 
                 Init(id, roomId, name, positionx, positiony, GameConst.MapElementZ, GameConst.Order_Ornament, "Scavengers_SpriteSheet", rect);
 
+                ObjType = GameConst.RoomElementType.Ornament;
         }
         #endregion
 

@@ -707,7 +707,7 @@ public class RoomManager : MonoBehaviour {
                         //AddRoom(mapTemp, DataManager.instance.GetRoomTemp(6), new Vector3(72, 80, 0.5f));
                         //AddRoom(mapTemp, DataManager.instance.GetRoomTemp(2), new Vector3(10, 10, 0.5f));
 
-                        CreateRooms(mapTemp);
+                        //CreateRooms(mapTemp);
                         CreateDoors();
 
                         int oldCount = roomList.Count;
