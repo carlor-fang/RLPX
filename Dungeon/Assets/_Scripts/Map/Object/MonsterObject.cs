@@ -17,7 +17,7 @@ public class MonsterObject : ActiveObject {
                 curTime += Time.deltaTime;
 	        if (curTime >= fixTargetTime)
                 {
-                        GetComponent<AutoMoveObject>().SetTarget(GameManager.instance.levelMgr.Hero.transform.position);
+                        //GetComponent<AutoMoveObject>().SetTarget(GameManager.instance.levelMgr.Hero.transform.position);
                         curTime = 0f;
                 }
 	}

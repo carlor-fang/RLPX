@@ -41,7 +41,7 @@ public class AutoMoveObject : MoveObject {
                 {
                         if (transform.position.x != curNode.pos.x || transform.position.y != curNode.pos.y)
                         {
-                                AutoMove();
+                                //AutoMove();
                         }
                         else if (isNewTarget)
                         {
@@ -49,12 +49,23 @@ public class AutoMoveObject : MoveObject {
                                 FindPath();
                         }
                         else
-                        { 
+                        {
+                                Destroy(curNode);
+                                curNode = null;
+
                                 pathList.RemoveAt(pathList.Count - 1);
                                 if (pathList.Count > 0)
+                                {
                                         curNode = pathList[pathList.Count - 1];
+                                        AutoMove();
+                                }
                                 else
-                                        curNode = null;                                
+                                        curNode = null;
+
+                                //if (curNode != null)
+                                //        Debug.Log("------curNode:" + curNode.pos);
+                                //else
+                                //        Debug.Log("over------");
                         }
                 }
         }
@@ -155,8 +166,16 @@ public class AutoMoveObject : MoveObject {
                                         temp = temp.parent;
                         }
 
+                        //for (int i = pathList.Count - 1; i >= 0; i--)
+                        //{
+                        //        Debug.Log("//////////////path node:" + pathList[i].pos);
+                        //}
                         if (pathList.Count > 0)
+                        {
                                 curNode = pathList[pathList.Count - 1];
+                                AutoMove();
+                                //Debug.Log("//////////////curNode :" + curNode.pos);
+                        }
                 }
                 isNewTarget = false;
         }
