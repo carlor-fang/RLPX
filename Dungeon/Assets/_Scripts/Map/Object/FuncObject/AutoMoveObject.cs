@@ -126,8 +126,10 @@ public class AutoMoveObject : MoveObject {
 
                 for (int i = 0; i < tempList.Count; i++)
                 {
+                        if (openList[tempList[i]] == null)
+                                continue;
                         PathNode temp = FindPath(openList[tempList[i]], end);
-                        if (temp!= null)
+                        if (temp != null)
                                 return temp;
                 }
 

@@ -126,7 +126,7 @@ public class MoveObject : MonoBehaviour {
                         //Find a new position proportionally closer to the end, based on the moveTime
                         Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime * Time.deltaTime);
 
-                        Debug.Log(rb2D.position);
+                        //Debug.Log(rb2D.position);
                         //Call MovePosition on attached Rigidbody2D and move it to the calculated position.
                         rb2D.MovePosition(newPostion);
                         //gameObject.transform.position = newPostion;
