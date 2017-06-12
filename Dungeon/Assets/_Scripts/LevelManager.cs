@@ -46,6 +46,21 @@ public class LevelManager : MonoBehaviour {
         void ClearScene()
         {
                 objectPositions.Clear();
+
+                if (hero != null)
+                {
+                        hero.Clear();
+                        Destroy(hero);
+                        hero = null;
+
+                }
+
+                if (monster != null)
+                {
+                        monster.Clear();
+                        Destroy(monster);
+                        monster = null;
+                }
         }
 
         #region camera

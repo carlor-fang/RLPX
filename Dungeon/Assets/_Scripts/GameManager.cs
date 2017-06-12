@@ -36,5 +36,10 @@ public class GameManager : MonoBehaviour {
         {
 		
 	}
+
+        public void Reset()
+        {
+                levelMgr.InitScene();
+        }
         #endregion
 }

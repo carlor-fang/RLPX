@@ -44,6 +44,10 @@ public class Main : MonoBehaviour {
                         //GameManager.instance.levelMgr.Monster.GetComponent<AutoMoveObject>().SetTarget(wp);
                 }
 
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                        GameManager.instance.Reset();
+                }
                 
         }
 }

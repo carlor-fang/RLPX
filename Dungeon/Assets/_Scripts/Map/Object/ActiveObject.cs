@@ -59,7 +59,6 @@ public class ActiveObject : BaseObject {
                 }
                 else if (curAction == GameConst.ObjectAction.Move)
                 {
-                        moveObject.UpdateMove();
                 }
         }
 
@@ -71,9 +70,8 @@ public class ActiveObject : BaseObject {
                 GameConst.ObjectAction action = nextAction.action;
                 nextAction.action = GameConst.ObjectAction.None;
 
-                if (action == GameConst.ObjectAction.Move)
-                        MoveProc(nextAction.pos);
-                else if (action == GameConst.ObjectAction.Attak)
+                //if (action == GameConst.ObjectAction.Move)
+                if (action == GameConst.ObjectAction.Attak)
                         CastSkillProc(nextAction.skillId);
                 else if (action == GameConst.ObjectAction.Hit)
                         SetCurAction(GameConst.ObjectAction.Hit, 0);
@@ -98,29 +96,6 @@ public class ActiveObject : BaseObject {
         private void CastSkillProc(int skillId)
         {
 
-        }
-        #endregion
-        #region move
-
-        private void MoveProc(Vector3 targetPos)
-        {
-                SetCurAction(GameConst.ObjectAction.Move, 0);
-
-                moveObject.MoveProc(targetPos);
-        }
-
-        //Move returns true if it is able to move and false if not. 
-        //Move takes parameters for x direction, y direction and a RaycastHit2D to check collision.
-
-        private void SetNextAction_Move(Vector3 pos)
-        {
-                nextAction.action       = GameConst.ObjectAction.Move;
-                nextAction.pos          = pos;
-        }
-
-        public void MoveTo(Vector3 pos)
-        {
-                SetNextAction_Move(pos);
         }
         #endregion
         #endregion

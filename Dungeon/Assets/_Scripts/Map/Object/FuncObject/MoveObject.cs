@@ -8,7 +8,7 @@ public class MoveObject : MonoBehaviour {
         public float moveTime = 0.1f;
 
         private Vector3 targetPosition;
-        private Vector3 nextPosition;
+        private List<Vector3> targetPosList;
 
         public LayerMask blockingLayer;
         protected BoxCollider2D boxCollider;
@@ -20,6 +20,8 @@ public class MoveObject : MonoBehaviour {
                 rb2D = GetComponent<Rigidbody2D>();
 
                 inverseMoveTime = 1f / moveTime;
+
+                targetPosList = new List<Vector3>();
         }
 
         // Update is called once per frame
@@ -27,58 +29,15 @@ public class MoveObject : MonoBehaviour {
                 
 	}
 
-        public void UpdateMove()
-        {
-                CalcDirection();
-        }
-
-        public void MoveProc(Vector3 targetPos)
-        {
-                targetPosition = targetPos;
-
-                CalcDirection();
-
-        }
-
-        private void SetNextPosition(int x, int y)
-        {
-                AttemptMove<Wall>(x, y);
-        }
-
-        private void CalcDirection()
-        {
-                
-                if (gameObject.transform.position.x < targetPosition.x)
-                {
-                        //SetDir(right);
-                        SetNextPosition(1, 0);
-                }
-                else if (gameObject.transform.position.x > targetPosition.x)
-                {
-                        //SetDir(left);
-                        SetNextPosition(-1, 0);
-                }
-                else if (gameObject.transform.position.y > targetPosition.y)
-                {
-                        //SetDir(bottom)
-                        SetNextPosition(0, -1);
-                }
-                else if (gameObject.transform.position.y < targetPosition.y)
-                {
-                        //SetDir(Top)
-                        SetNextPosition(0, 1);
-                }
-        }
-
         private bool Move(int xDir, int yDir)
         {
                 //Store start position to move from, based on objects current transform position.
                 Vector2 start = new Vector2(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)); // transform.position;
 
                 // Calculate end position based on the direction parameters passed in when calling Move.
-                Vector2 end = start + new Vector2(xDir, yDir);
+                targetPosition = start + new Vector2(xDir, yDir);
 
-                StartCoroutine(SmoothMovement(end));
+                StartCoroutine(SmoothMovement(targetPosition));
 
                 return true;
         }
@@ -89,13 +48,13 @@ public class MoveObject : MonoBehaviour {
                 Vector2 start = new Vector2(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)); // transform.position;
 
                 // Calculate end position based on the direction parameters passed in when calling Move.
-                Vector2 end = start + new Vector2(xDir, yDir);
+                targetPosition = start + new Vector2(xDir, yDir);
 
                 //Disable the boxCollider so that linecast doesn't hit this object's own collider.
                 boxCollider.enabled = false;
 
                 //Cast a line from start point to end point checking collision on blockingLayer.
-                hit = Physics2D.Linecast(start, end, blockingLayer);
+                hit = Physics2D.Linecast(start, targetPosition, blockingLayer);
 
                 //Re-enable boxCollider after linecast
                 boxCollider.enabled = true;
@@ -104,7 +63,7 @@ public class MoveObject : MonoBehaviour {
                 if (hit.transform == null)
                 {
                         //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-                        StartCoroutine(SmoothMovement(end));
+                        StartCoroutine(SmoothMovement(targetPosition));
 
                         //Return true to say that Move was successful
                         return true;
