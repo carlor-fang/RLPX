@@ -13,6 +13,8 @@ public class LevelManager : MonoBehaviour {
         private MonsterObject monster;
         public MonsterObject Monster { get { return monster; } }
 
+        private Dictionary<Vector3, int> objectPositions = new Dictionary<Vector3, int>();
+
         static public int GetElementID()
         {
                 return ++ELEMIDSEED;
@@ -24,8 +26,9 @@ public class LevelManager : MonoBehaviour {
                 GameObject playerObject = Instantiate(Prefab);
                 string name = "Player";
                 hero = playerObject.GetComponent<Player>();
-                Vector3 pos = room.GetRandomBlankFloor();
+                Vector3 pos = room.GetRandomBlankFloor(objectPositions);
                 hero.Init(0, room.RoomId, name, pos.x, pos.y);
+                objectPositions[pos] = 1;
         }
 
         void TestBornMonster(Room room)
@@ -34,9 +37,15 @@ public class LevelManager : MonoBehaviour {
                 GameObject monsterObject = Instantiate(Prefab);
                 string name = "Monster";
                 monster = monsterObject.GetComponent<MonsterObject>();
-                Vector3 pos = room.GetRandomBlankFloor();
+                Vector3 pos = room.GetRandomBlankFloor(objectPositions);
                 monster.Init(0, room.RoomId, name, pos.x, pos.y);
                 monster.GetComponent<AutoMoveObject>().SetRoom(room);
+                objectPositions[pos] = 1;
+        }
+
+        void ClearScene()
+        {
+                objectPositions.Clear();
         }
 
         #region camera
@@ -65,6 +74,8 @@ public class LevelManager : MonoBehaviour {
 
         public void InitScene()
         {
+                ClearScene();
+
                 Room room = mapMgr.InitScene(DataManager.instance.GetMapTemp(curLevel));
                 if (!room) return;
 

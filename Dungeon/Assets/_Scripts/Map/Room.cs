@@ -528,15 +528,31 @@ public class Room : MonoBehaviour {
                 return null;
         }
 
-        ///待改
-        public Vector3 GetRandomBlankFloor()
+        public Vector3 GetRandomBlankFloor(Dictionary<Vector3, int> exceptList)
         {
-                while (true)
+                List<int> tempList = new List<int>();
+                try
                 {
-                        int index = Mathf.FloorToInt(UnityEngine.Random.value * floorList.Count);
-                        RoomElement roomEle = objList[floorList[index]] as RoomElement;
-                        if (roomEle && roomEle.OrnamentId == 0)
-                                return roomEle.Position;
+                        for (int i = 0; i < floorList.Count; i++)
+                        {
+                                BaseObject obj = objList[floorList[i]];
+                                if (exceptList.ContainsKey(obj.Position)) continue;
+
+                                if ((obj.Position.x == roomBounds.min.x + GameConst.RoomOutsize)
+                                        || (obj.Position.x == roomBounds.max.x - GameConst.RoomOutsize)
+                                        || (obj.Position.y == roomBounds.min.y + GameConst.RoomOutsize)
+                                        || (obj.Position.y == roomBounds.max.y - GameConst.RoomOutsize))
+                                        tempList.Add(floorList[i]);
+                        }
+
+                        int index = Mathf.FloorToInt(UnityEngine.Random.value * tempList.Count);
+                        return objList[tempList[index]].Position;
+                        
+                }
+                finally
+                {
+                        tempList.Clear();
+                        tempList = null;
                 }
         }
 
