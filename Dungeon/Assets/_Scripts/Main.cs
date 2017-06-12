@@ -41,7 +41,7 @@ public class Main : MonoBehaviour {
                         Vector2 wp = GetComponent<Camera>().ScreenToWorldPoint(sp);
                         wp.x = Mathf.RoundToInt(wp.x);
                         wp.y = Mathf.RoundToInt(wp.y);               
-                        GameManager.instance.levelMgr.Monster.GetComponent<AutoMoveObject>().SetTarget(wp);
+                        //GameManager.instance.levelMgr.Monster.GetComponent<AutoMoveObject>().SetTarget(wp);
                 }
 
                 
