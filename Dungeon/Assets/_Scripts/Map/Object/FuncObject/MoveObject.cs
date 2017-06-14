@@ -9,6 +9,7 @@ public class MoveObject : MonoBehaviour {
 
         private Vector3 targetPosition;
         private List<Vector3> targetPosList;
+        private bool isMove = false;
 
         public LayerMask blockingLayer;
         protected BoxCollider2D boxCollider;
@@ -82,6 +83,7 @@ public class MoveObject : MonoBehaviour {
                 //While that distance is greater than a very small amount (Epsilon, almost zero):
                 while (sqrRemainingDistance > float.Epsilon)
                 {
+                        isMove = true;
                         //Find a new position proportionally closer to the end, based on the moveTime
                         Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime * Time.deltaTime);
 
@@ -97,13 +99,14 @@ public class MoveObject : MonoBehaviour {
                         yield return null;
                 }
 
-
+                isMove = false;
         }
 
         public void AttemptMove<T>(int xDir, int yDir)
         where T : Component
         {
-
+                if (isMove && (transform.position.x != targetPosition.x || transform.position.y != targetPosition.y))
+                        return;
                 //Set canMove to true if Move was successful, false if failed.
                 if (gameObject.tag == "Player")
                 {
