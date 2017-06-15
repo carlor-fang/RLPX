@@ -219,17 +219,31 @@ public class RoomManager : MonoBehaviour {
                         case GameConst.Dir_Left:
                         case GameConst.Dir_Right:
                                 {
-                                        if (from.max.y - 1 == doorPosition || from.min.y + 1 == doorPosition ||
-                                                to.max.y - 1 == doorPosition || to.min.y + 1 == doorPosition)
+                                        if ((from.max.y - GameConst.RoomOutsize) - (to.min.y + GameConst.RoomOutsize) <= 0)
+                                                return false;
+                                        if ((to.max.y - GameConst.RoomOutsize) - (from.min.y + GameConst.RoomOutsize) <= 0)
                                                 return false;
                                 }
                                 break;
+                                //{
+                                //        if (from.max.y - GameConst.RoomOutsize == to.min.y + GameConst.RoomOutsize
+                                //                || to.max.y - GameConst.RoomOutsize == from.min.y + GameConst.RoomOutsize)
+                                //                return false;
+                                //        //if (from.max.y - GameConst.RoomOutsize == doorPosition || from.min.y + GameConst.RoomOutsize == doorPosition ||
+                                //        //        to.max.y - GameConst.RoomOutsize == doorPosition || to.min.y + GameConst.RoomOutsize == doorPosition)
+                                //        //        return false;
+                                //}
+                                //break;
                         case GameConst.Dir_Top:
                         case GameConst.Dir_Bottom:
                                 {
-                                        if (from.min.x + 1 == doorPosition || from.max.x - 1 == doorPosition ||
-                                                to.min.x + 1 == doorPosition || to.max.x - 1 == doorPosition)
+                                        if ((from.max.x - GameConst.RoomOutsize) - (to.min.x + GameConst.RoomOutsize) <= 0)
                                                 return false;
+                                        if ((to.max.x - GameConst.RoomOutsize) - (from.min.x + GameConst.RoomOutsize) <= 0)
+                                                return false;
+                                        //if (from.min.x + GameConst.RoomOutsize == doorPosition || from.max.x - GameConst.RoomOutsize == doorPosition ||
+                                        //        to.min.x + GameConst.RoomOutsize == doorPosition || to.max.x - GameConst.RoomOutsize == doorPosition)
+                                        //        return false;
                                 }
                                 break;
                 }
@@ -702,9 +716,9 @@ public class RoomManager : MonoBehaviour {
                 {
                         ClearScene();
 
-                        //AddRoom(mapTemp, DataManager.instance.GetRoomTemp(1), new Vector3(6, 26, 0.5f));
-                        //AddRoom(mapTemp, DataManager.instance.GetRoomTemp(1), new Vector3(7, 11, 0.5f));
-                        //AddRoom(mapTemp, DataManager.instance.GetRoomTemp(6), new Vector3(72, 80, 0.5f));
+                        //AddRoom(mapTemp, DataManager.instance.GetRoomTemp(6), new Vector3(11, 27, 0.5f));
+                        //AddRoom(mapTemp, DataManager.instance.GetRoomTemp(1), new Vector3(14, 49, 0.5f));
+                        ////AddRoom(mapTemp, DataManager.instance.GetRoomTemp(6), new Vector3(72, 80, 0.5f));
                         //AddRoom(mapTemp, DataManager.instance.GetRoomTemp(2), new Vector3(10, 10, 0.5f));
 
                         CreateRooms(mapTemp);
